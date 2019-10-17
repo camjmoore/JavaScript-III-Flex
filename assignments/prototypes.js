@@ -1,17 +1,17 @@
-/*
 
-  In order to do these exercises you'll need your newly acquired knowledge on
-  constructor functions, methods, prototypes and the `this` keyword.
-  Here's an example of an exercise:
 
-  TASK 0:
+  // In order to do these exercises you'll need your newly acquired knowledge on
+  // constructor functions, methods, prototypes and the `this` keyword.
+  // Here's an example of an exercise:
 
-  - Build an Airplane constructor that takes a name.
-  - Give airplanes the ability to take off and land.
-  - If a plane takes off, its "isFlying" property is true.
-  - If a plane lands, its "isFlying" property is false.
+  // TASK 0:
 
-  SOLUTION CODE:
+  // - Build an Airplane constructor that takes a name.
+  // - Give airplanes the ability to take off and land.
+  // - If a plane takes off, its "isFlying" property is true.
+  // - If a plane lands, its "isFlying" property is false.
+
+  // SOLUTION CODE:
 
   function Airplane(name) {
     this.name = name;
@@ -24,7 +24,7 @@
     this.isFlying = false;
   }
 
-  HOW TO TEST OUR SOLUTION:
+  // HOW TO TEST OUR SOLUTION:
 
   const jumbo = new Airplane('Jumbo');
   console.log(jumbo.name)              // 'Jumbo'
@@ -33,43 +33,91 @@
   console.log(jumbo.isFlying)          // true
   jumbo.land();
   console.log(jumbo.isFlying)          // false
-*/
 
-/*
 
-  TASK 1
 
-  - Build a Person Constructor that takes name and age.
-  - Give persons the ability to greet by returning a string stating name and age.
-  - Give persons the ability to eat edibles.
-  - When eating an edible, it should be pushed into a "stomach" property which is an array.
-  - Give persons the ability to poop.
-  - When pooping, the stomach should empty.
 
-  TASK 2
+  // TASK 1
 
-  - Build a Car constructor that takes model name and make.
-  - Give cars the ability to drive a distance.
-  - By driving a car, the distance driven should be added to an "odometer" property.
-  - Give cars the ability to crash.
-  - A crashed car can't be driven any more. Attempts return a string "I crashed at x miles!", x being the miles in the odometer.
-  - Give cars the ability to be repaired.
-  - A repaired car can be driven again.
+  // - Build a Person Constructor that takes name and age.
+  // - Give persons the ability to greet by returning a string stating name and age.
+  // - Give persons the ability to eat edibles.
+  // - When eating an edible, it should be pushed into a "stomach" property which is an array.
+  // - Give persons the ability to poop.
+  // - When pooping, the stomach should empty.
 
-  TASK 3
+function Person(attributes){
+  this.name = attributes.name;
+  this.age = attributes.age;
+  this.stomach = [];
+}
 
-  - Build a Baby constructor that subclasses the Person built earlier.
-  - Babies of course inherit the ability to greet, which can be strange.
-  - Babies should have the ability to play, which persons don't.
-  - By playing, a string is returned with some text of your choosing.
+Person.prototype.greet = function(){
+  return `${this.name} says Hello!`
+}
 
-  TASK 4
+Person.prototype.eat = function(edibles){
+  this.stomach.push(edibles)
+  return `${this.name}\'s stomach is filled with ${this.stomach}`
+}
 
-  Use your imagination and come up with constructors that allow to build objects
-  With amazing and original capabilities. Build 3 small ones, or a very
-  complicated one with lots of state. Surprise us!
+Person.prototype.poop = function(){
+  this.stomach = []
+  return `${this.name}\'s stomach is empty`
+}
 
-*/
+let guy = new Person({
+  name: 'Gary',
+  age: 32,
+  stomach: []
+})
+
+console.log(guy.greet())
+console.log(guy.eat('pizza'))
+console.log(guy.poop())
+
+  // TASK 2
+  // - Build a Car constructor that takes model name and make.
+  // - Give cars the ability to drive a distance.
+  // - By driving a car, the distance driven should be added to an "odometer" property.
+  // - Give cars the ability to crash.
+  // - A crashed car can't be driven any more. Attempts return a string "I crashed at x miles!", x being the miles in the odometer.
+  // - Give cars the ability to be repaired.
+  // - A repaired car can be driven again.
+
+function Car(attributes){
+  this.modelName = attributes.modelName;
+  this.make = attributes.make;
+  this.odometer = 0
+}
+
+Car.prototype.drive = function(distance){
+  `I drove ${this.odometer += distance} miles`
+}
+
+Car.prototype.crashed = function(){
+
+  `I crashed at ${this.odometer} miles`
+}
+
+Car.prototype.repaired = function(){
+  ``
+}
+
+  // TASK 3
+
+  // - Build a Baby constructor that subclasses the Person built earlier.
+  // - Babies of course inherit the ability to greet, which can be strange.
+  // - Babies should have the ability to play, which persons don't.
+  // - By playing, a string is returned with some text of your choosing.
+
+  // TASK 4
+
+  // Use your imagination and come up with constructors that allow to build objects
+  // With amazing and original capabilities. Build 3 small ones, or a very
+  // complicated one with lots of state. Surprise us!
+
+
 
 /*
 
@@ -90,12 +138,34 @@
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
 
+function GameObject(attributes){
+  this.createdAt = attributes.createdAt;
+  this.name = attributes.name;
+  this.dimensions = attributes.dimensions;
+}
+
+GameObject.prototype.destroy = function(){
+return `${this.name} was removed from the game.`
+};
+
 /*
   === CharacterStats ===
   * healthPoints
   * takeDamage() // prototype method -> returns the string '<object name> took damage.'
   * should inherit destroy() from GameObject's prototype
 */
+
+function CharacterStats(attributes){
+  GameObject.call(this,attributes);
+this.healthPoints = attributes.healthPoints;
+
+}
+
+CharacterStats.prototype = Object.create(GameObject.prototype);
+
+CharacterStats.prototype.takeDamage = function (num){
+return `${this.name} took ${num} damage points.`
+};
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -107,6 +177,19 @@
   * should inherit takeDamage() from CharacterStats
 */
 
+function Humanoid(attributes) {
+  CharacterStats.call(this,attributes);
+  this.team = attributes.team;
+  this.weapons = attributes.weapons;
+  this.language = attributes.language;
+}
+
+Humanoid.prototype = Object.create(CharacterStats.prototype);
+
+Humanoid.prototype.greet = function() {
+  return `${this.name} offers a greeting in ${this.language}`
+};
+
 /*
   * Inheritance chain: GameObject -> CharacterStats -> Humanoid
   * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
@@ -115,7 +198,7 @@
 
 // Test you work by un-commenting these 3 objects and the list of console logs below:
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -173,4 +256,4 @@
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
