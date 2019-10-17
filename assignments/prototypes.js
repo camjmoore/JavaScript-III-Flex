@@ -63,7 +63,7 @@ Person.prototype.eat = function(edibles){
 
 Person.prototype.poop = function(){
   this.stomach = []
-  return `${this.name}\'s stomach is empty`
+  return `${this.name}\'s stomach is all empty`
 }
 
 let guy = new Person({
@@ -88,28 +88,77 @@ console.log(guy.poop())
 function Car(attributes){
   this.modelName = attributes.modelName;
   this.make = attributes.make;
-  this.odometer = 0
+  this.odometer = attributes.odometer;
+  this.mobility = attributes.mobility
 }
 
 Car.prototype.drive = function(distance){
-  `I drove ${this.odometer += distance} miles`
+  if(this.mobility === 'crashed' ){
+    return `a crashed ${this.make} can\'t be driven anymore!`
+  }else if(this.mobility === 'mobile' ){
+    this.odometer += distance
+    return `I drove ${distance} miles`
+  }
 }
 
 Car.prototype.crashed = function(){
-
-  `I crashed at ${this.odometer} miles`
+   this.mobility = 'crashed'
+   return `I crashed at ${this.odometer} miles`
 }
 
 Car.prototype.repaired = function(){
-  ``
+  this.mobility = 'mobile'
+  return ` the ${this.make} is ${this.mobility}`
 }
 
-  // TASK 3
+Car.prototype.resetOdometer = function(){
+  this.odometer = 0;
+  return this.odometer 
+}
 
+let porsche = new Car({
+  modelName: '930 Turbo',
+  make: 'Porsche',
+  odometer: 0,
+  mobility: 'mobile'
+})
+
+console.log(porsche.drive(65))
+console.log(porsche.crashed())
+console.log(porsche.drive())
+console.log(porsche.repaired())
+console.log(porsche.drive(45))
+console.log(porsche.odometer)
+console.log(porsche.resetOdometer())
+
+  // TASK 3
   // - Build a Baby constructor that subclasses the Person built earlier.
   // - Babies of course inherit the ability to greet, which can be strange.
   // - Babies should have the ability to play, which persons don't.
   // - By playing, a string is returned with some text of your choosing.
+
+function Baby(attributes){
+  Person.call(this, attributes);
+  this.toy = attributes.toy;
+}  
+
+Baby.prototype = Object.create(Person.prototype)
+
+Baby.prototype.play = function(){
+  return `${this.name} played with the ${this.toy}`
+}
+
+let babyBlue = new Baby({
+  name: 'Blue',
+  age: 3,
+  stomach: [],
+  toy: 'Fire-truck'
+})
+
+console.log(babyBlue.greet())
+console.log(babyBlue.play())
+console.log(babyBlue.eat('carrots'))
+console.log(babyBlue.poop())
 
   // TASK 4
 
@@ -117,6 +166,97 @@ Car.prototype.repaired = function(){
   // With amazing and original capabilities. Build 3 small ones, or a very
   // complicated one with lots of state. Surprise us!
 
+function Coffee(attributes) {
+  this.region = attributes.region,
+  this.roast = attributes.roast,
+  this.aromatics = attributes.aromatics
+}
+
+let rwandanCoffee = new Coffee({
+  region: 'Rwandan',
+  roast: 'moderate',
+  aromatics: 'fruity'
+})
+
+let tanzanianCoffee = new Coffee({
+  region: 'Tanzanian',
+  roast: 'moderate',
+  aromatics: 'floral'
+})
+
+function FavoriteCoffee(attributes){
+  Coffee.call(this, attributes);
+}
+
+FavoriteCoffee.prototype.favorite = function (){
+  return `My favorite coffee is ${this.region}, it is ${this.roast}ly roasted and has a ${this.aromatics} aroma`
+}
+
+let ethiopianCoffee = new FavoriteCoffee({
+  region: 'Ethiopian',
+  roast: 'light',
+  aromatics: 'floral'
+})
+
+console.log(ethiopianCoffee.favorite())
+
+
+function Beer(attributes){
+  this.style = attributes.style;
+  this.flavors = attributes.flavors;
+  this.ABV = attributes.ABV;
+}
+
+let dalesPaleAle = new Beer({
+  style: 'Pale Ale',
+  flavors: ['hoppy', 'malty'],
+  ABV: '5%'
+})
+
+let ecliptical = new Beer({
+  style: 'Saison',
+  flavors: ['Citrusy', 'Woody'],
+  ABV: '7%'
+})
+
+function FavoriteBeer(attributes){
+  Beer.call(this, attributes);
+}
+
+FavoriteBeer.prototype.favorite = function(){
+  return `My favorite beer is a ${this.style}, it is a liquid dessert!`
+}
+
+let breakfastStout = new FavoriteBeer({
+  style: 'Double Chocolate Coffee Oatmeal Stout',
+  flavors: ['Chocolatey', 'Roasty', 'Coffee'],
+  ABV: '8.3%'
+})
+
+console.log(dalesPaleAle.flavors)
+console.log(breakfastStout.favorite())
+
+
+function Music(attributes){
+  this.genre = attributes.genre;
+  this.mood = attributes.mood;
+  this.instruments = attributes.instruments;
+}
+
+let radioHead = new Music({
+  genre: 'progressive-rock',
+  mood: 'introspective',
+  instruments: ['guitars', 'drums', 'pianos', 'synthesizers']
+})
+
+let brianEno = new Music({
+  genre: 'ambient',
+  mood: 'meditative',
+  instruments: ['computers']
+})
+
+console.log(brianEno.instruments)
+console.log(radioHead.genre)
 
 
 /*
